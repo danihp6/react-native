@@ -2,28 +2,49 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, Button} from 'react-native';
 
 import Grid from 'react-native-grid-component';
-import CardFlip from 'react-native-card-flip'
+import Card from './src/Card'
 
 import Countdown from './src/Countdown'
 
+import {defaultGame} from './src/Game'
+
+import {doTurn} from './src/Logic'
+
 
 export default class App extends Component {
-  _renderItem = (data, i) => (
-    <CardFlip key={i} style={styles.cardContainer} ref={card => (this['card' + i] = card)}>
-      <TouchableOpacity
-        activeOpacity={1}
-        style={[styles.card, styles.card2]}
-        onPress={() => this['card' + i].flip()}>
-        <Text style={styles.label}>BACK</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        activeOpacity={1}
-        style={[styles.card, styles.card1]}
-        onPress={() => this['card' + i].jiggle({ count: 2, duration: 100, progress: 0.05 })}>
-        <Image style={{ flex: 1 }} source={{ uri: 'https://www.theblocklearning.com/wp-content/uploads/2018/09/512px-React-icon.svg.png' }} />
-      </TouchableOpacity>
+  constructor(props) {
+    super(props)
+    this.state = {
+        game : defaultGame,
+    }
+}
 
-    </CardFlip>
+  updateGame = (newGame)=>{
+    this.setState({
+      game:newGame
+    })
+    console.log('updatedGame')
+  }
+
+  // updatePaused = (newPaused)=>{
+  //   let game=this.state.game
+  //   game.setPaused = newPaused
+  //   this.setState({
+  //     game:game
+  //   })
+  //   console.log('updatedPausa')
+  // }
+
+  // getPaused = ()=>{
+  //   return this.state.game.getPaused
+  // }
+
+  doTurn=(index)=>{
+    doTurn(this.state.game,index,this.updateGame)
+  }
+
+  _renderItem = (data, i) => (
+    <Card data={data} i={i} doTurn={this.doTurn} /*getPaused={this.getPaused} updatePaused={this.updatePaused}*/></Card>
   );
 
 
@@ -35,7 +56,7 @@ export default class App extends Component {
         <Grid
           style={styles.list}
           renderItem={this._renderItem}
-          data={['black', 'white', 'red', 'green', 'blue', 'orange', 'black', 'white', 'red', 'green', 'blue', 'orange']}
+          data={this.state.game.cards}
           numColumns={3}
         />
       </View>
@@ -49,28 +70,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10
   },
-  cardContainer: {
-    flex: 1,
-    height: 100,
-  },
-  card: {
-    flex: 1,
-    borderRadius: 10,
-    shadowColor: 'rgba(0,0,0,0.5)',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.5,
-    margin: 5,
-    justifyContent: 'center'
-  },
-  card1: {
-    backgroundColor: '#FE474C',
-  },
-  card2: {
-    backgroundColor: '#FEB12C',
-  },
+
   label: {
     textAlign: 'center',
     fontSize: 20,

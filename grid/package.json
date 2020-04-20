@@ -10,9 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "babel-preset-stage-1": "^6.24.1",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-card-flip": "^1.0.6",
+    "react-native-flip-card": "^3.5.5",
     "react-native-grid-component": "^2.0.1"
   },
   "devDependencies": {
